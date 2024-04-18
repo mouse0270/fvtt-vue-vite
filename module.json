@@ -1,0 +1,66 @@
+{
+	"id": "fvtt-vue-vite",
+	"title": "Foundry VTT - Vue.js | VITE",
+	"version": "0.0.1",
+	"compatibility": {
+		"minimum": 12,
+		"verified": 12
+	},
+	"authors": [{
+		"name": "Mouse0270",
+		"url": "https://github.com/mouse0270/",
+		"email": "rmcintosh@websitesbyfatdudes.com",
+		"discord": "Mouse0270#0270",
+
+		"flags": {
+			"twitter": "Mouse0270",
+			"patreon": "Mouse0270",
+			"github": "Mouse0270",
+			"ko-fi": "Mouse0270",
+			"reddit": "u/Mouse0270"
+		}
+	}],
+
+	"library": true,
+	"socket": false,
+
+	"relationships": {
+		"systems": [],
+		"requires": [],
+		"conflicts": []
+	},
+
+	"esmodules": [ 
+		"/dist/main.js" 
+	],
+	"scripts": [],
+	"styles": [ "/dist/style.css" ],
+	"languages": [{
+		"lang": "en",
+		"name": "English",
+		"path": "languages/en.json"
+	}],
+
+	"media": [],
+	"url": "This is auto replaced",
+	"manifest": "This is auto replaced",
+	"download": "This is auto replaced",
+	"readme": "This is auto replaced",
+	"changelog": "This is auto replaced",
+	"license": "This is auto replacedE",
+	"bugs": "This is auto replaced",
+
+	"flags": {
+		"allowBugReporter": true, 
+		"attributions": "This is auto replaced",
+		"hotReload": {
+			"extensions": ["css", "html", "handlebars", "hbs", "json", "vue"], 
+			"paths": ["assets", "languages", "templates"]
+		},
+		"logger": {
+			"enabled": true,
+			"background": "#646cff",
+			"foreground": "#ffffff"
+		}
+	}
+}
