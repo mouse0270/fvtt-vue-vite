@@ -43,18 +43,24 @@ class VueApplication extends VueApplicationMixin(ApplicationV2) {
 		actions: { }
 	}, { inplace: false });
 
+	static DEBUG = true;
+
 	static PARTS = {
 		app: {
 			id: "app",
-			component: App
+			component: App,
+			props: {
+				title: "Vue Application",
+				content: "This is a sample Vue Application using the VueApplicationMixin."
+			}
 		}
 	}
 }
 
 Hooks.once('ready', async () => {
-	l.log("Hook.Ready | ESM Vue Application | Use ViteUserConfig() to render the Vue Sample usign VueApplicationMixin.")
+	l.log("Hook.Ready | VITE Vue Application | Use ViteUserConfig() to render the Vue Sample usign VueApplicationMixin.")
 	window.ViteUserConfig = async () => await new VueUserConfig().render(true);
 
-	l.log("Hook.Ready | ESM Vue Application | Use ViteApp() to render the Vue Sample using VueApplicationMixin.")
+	l.log("Hook.Ready | VITE Vue Application | Use ViteApp() to render the Vue Sample using VueApplicationMixin.")
 	window.ViteApp = async () => await new VueApplication().render(true);
 });

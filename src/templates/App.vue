@@ -1,6 +1,13 @@
 <script setup>
 import DemoGrid from './components/Grid.vue'
-import { ref } from 'vue'
+import { ref, defineProps, onMounted, onUnmounted, watch } from 'vue'
+
+const props = defineProps({
+  title: {
+    type: String,
+    default: 'Hello Vue 3'
+  },
+})
 
 const searchQuery = ref('')
 const gridColumns = ['name', 'power']
@@ -13,6 +20,7 @@ const gridData = [
 </script>
 
 <template>
+  <h1>{{ props.title }}</h1>
   <form id="search">
     Search <input name="query" v-model="searchQuery">
   </form>
