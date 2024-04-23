@@ -2,6 +2,8 @@ import Module from "./module.mjs";
 import { VueApplicationMixin } from './libs/VueApplicationMixin.mjs';
 import { logger as l } from './logger.mjs';
 
+import { createApp, h, reactive } from 'vue';
+
 
 import App from "../../templates/App.vue";
 import UserConfig from "../../templates/UserConfig.vue";
@@ -43,7 +45,7 @@ class VueApplication extends VueApplicationMixin(ApplicationV2) {
 		actions: { }
 	}, { inplace: false });
 
-	static DEBUG = true;
+	static DEBUG = false;
 
 	static PARTS = {
 		app: {
@@ -56,6 +58,18 @@ class VueApplication extends VueApplicationMixin(ApplicationV2) {
 		}
 	}
 }
+
+Hooks.on('ready', async () => {
+	window.VueProps = reactive({
+		title: "Vue Application",
+		content: "This is a sample Vue Application using the VueApplicationMixin."
+	});
+	window.VueApp = createApp({
+		render: () => h(App, { ...VueProps })
+	})
+
+	window.VueApp.mount("#chat-log");
+})
 
 Hooks.once('ready', async () => {
 	l.log("Hook.Ready | VITE Vue Application | Use ViteUserConfig() to render the Vue Sample usign VueApplicationMixin.")

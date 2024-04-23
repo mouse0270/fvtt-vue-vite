@@ -1,6 +1,6 @@
-import { createApp, reactive } from 'vue';
+import { createApp, h, reactive } from 'vue';
 
-export const VueApplicationMixinVersion = '0.0.2';
+export const VueApplicationMixinVersion = '0.0.3';
 
 /**
  * A mixin class that extends a base application with Vue.js functionality.
@@ -99,14 +99,16 @@ export function VueApplicationMixin(BaseApplication) {
 
 				// Get the Vue Instance for the Part if it doesn't exist or force is true
 				if (!this.#instances[part.id] || options?.force === true) {
-					console.log(`VueApplicationMixin | _renderHTML | Setting Up Vue Instance ${part.id} |`);
+					if (this.constructor.DEBUG) console.log(`VueApplicationMixin | _renderHTML | Setting Up Vue Instance ${part.id} |`);
 					// Get the Vue Instance for the Part
-					this.#instances[part.id] = await (part?.app ?? part?.component ?? part?.template);
+					const App = await (part?.app ?? part?.component ?? part?.template);
 					// Get the props for the Part using the options or the part props
 					this.#props[part.id] = reactive(options?.props ?? part?.props ?? {});
 
 					// If not a Vue Instance, create one
-					if (typeof this.#instances[part.id]?.mount !== 'function') this.#instances[part.id] = createApp(this.#instances[part.id], this.#props[part.id]);
+					this.#instances[part.id] = createApp({
+						render: () => h(App, {...this.#props[part.id] })
+					});
 				}
 				if (this.constructor.DEBUG) console.log(`VueApplicationMixin | _renderHTML | Vue Instance ${part.id} |`, this.#instances[part.id], this.#props[part.id])
 
@@ -133,13 +135,9 @@ export function VueApplicationMixin(BaseApplication) {
 
 				// Since Vue Components shouldnt be replaced, warn the user
 				if (target && (options?.force ?? false) === false) {
-					//foundry.utils.mergeObject(this.#props[part.id], options?.props ?? {}, { inplace: true, insertKeys: true});
-					this.#props[part.id].title = options?.props?.title ?? this.#props[part.id].title;
+					foundry.utils.mergeObject(this.#props[part.id], options?.props ?? {}, { inplace: true, insertKeys: true});
+					//this.#props[part.id].title = options?.props?.title ?? this.#props[part.id].title;
 					if (this.constructor.DEBUG) console.log(`VueApplicationMixin | _replaceHTML | Update Vue Part |`, target, part.id, this.#instances[part.id], this.#props[part.id]);
-					// Force Component to Update
-					//this.#instances[part.id].forceUpdate();
-					//this.#props[part.id] = options?.props ?? this.#props[part.id];
-					//ui.notifications.warn(`Part "${key}" is already rendered for ${this.constructor.name} using Vue. It is not recommended to replace the Vue Component.`);
 					continue;
 				}
 				// TODO: Add a way to update the Vue Instance with new Data

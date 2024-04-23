@@ -1,6 +1,6 @@
 <script setup>
 import DemoGrid from './components/Grid.vue'
-import { ref, defineProps, onMounted, onUnmounted, watch } from 'vue'
+import { ref, defineProps } from 'vue'
 
 const props = defineProps({
   title: {
