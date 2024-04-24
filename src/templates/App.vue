@@ -1,6 +1,12 @@
 <script setup>
 import DemoGrid from './components/Grid.vue'
-import { ref, defineProps } from 'vue'
+import { ref, defineProps, inject, onMounted } from 'vue'
+
+const onChange = inject('onChange');
+const onInput = inject('onInput');
+const onSubmit = inject('onSubmit');
+const buttonAction1 = inject('buttonAction1');
+const buttonAction2 = inject('buttonAction2');
 
 const props = defineProps({
   title: {
@@ -21,7 +27,7 @@ const gridData = [
 
 <template>
   <h1>{{ props.title }}</h1>
-  <form id="search">
+  <form class="form1" id="search" @input="onInput" @change="onChange" @submit="onSubmit">
     Search <input name="query" v-model="searchQuery">
   </form>
   <DemoGrid
@@ -29,4 +35,6 @@ const gridData = [
     :columns="gridColumns"
     :filter-key="searchQuery">
   </DemoGrid>
+  <button @click="buttonAction1">Button 1</button>
+  <button @click="buttonAction2">Button 2</button>
 </template>

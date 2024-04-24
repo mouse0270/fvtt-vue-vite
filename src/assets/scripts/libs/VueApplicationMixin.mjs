@@ -1,6 +1,6 @@
 import { createApp, h, reactive } from 'vue';
 
-export const VueApplicationMixinVersion = '0.0.3';
+export const VueApplicationMixinVersion = '0.0.4';
 
 /**
  * A mixin class that extends a base application with Vue.js functionality.
@@ -38,7 +38,7 @@ export function VueApplicationMixin(BaseApplication) {
 		 * The private containers for Vue instances.
 		 * @type {Object<string, Vue>}
 		 */
-		#instances = {};
+		#instance = null;
 
 		/**
 		 * The private containers for Vue instances.
@@ -61,19 +61,10 @@ export function VueApplicationMixin(BaseApplication) {
 		 * @param {Object} options - The render options.
 		 * @returns {Promise<void>}
 		 */
+		// TODO: This function used to load vue files using SFC, but since that has been removed, this function appears to do nothing.
+		// ?? Maybe this function should be removed or updated to do something else?
 		async _preFirstRender(context, options) {
 			await super._preFirstRender(context, options);
-			const allTemplates = new Set();
-			for (const part of Object.values(this.constructor.PARTS)) {
-				const partTemplates = [
-					...(part.templates ?? [part.template]),
-					...(part.components ?? [part.component]),
-					...[part?.app]
-				].filter(p => p !== undefined);
-				for (const template of partTemplates) allTemplates.add(template);
-			}
-
-			if (this.constructor.DEBUG) console.log(`VueApplicationMixin | _preFirstRender | Retrieved Vue Parts |`, allTemplates);
 		}
 
 		/**
@@ -85,37 +76,28 @@ export function VueApplicationMixin(BaseApplication) {
 		async _renderHTML(context, options) {
 			const rendered = {};
 			if (this.constructor.DEBUG) console.log(`VueApplicationMixin | _renderHTML |`, context, options);
-			for (const [key, part] of Object.entries(this.constructor.PARTS)) {
+
+			// Loop through the parts and render them
+			for (const partId of options.parts) {
+				// Get the part from the PARTS object
+				const part = this.constructor.PARTS[partId];
+
+				// If part is not in the PARTS object, skip it
 				if (!part) {
-					ui.notifications.warn(`Part "${key}" is not a supported template part for ${this.constructor.name}`);
-					continue;
+				  ui.notifications.warn(`Part "${partId}" is not a supported template part for ${this.constructor.name}`);
+				  continue;
 				}
 
-				// If part is not in options.parts, skip it
-				if (!options.parts.includes(key)) continue;
-				
-				// If instance already exists and force is true, unmount it
-				if (this.#instances[part.id] && options?.force === true) this.#instances[part.id].unmount();
+				// If props for the part don't exist, create them
+				if (!this.#props?.[partId]) this.#props[partId] = reactive(options?.props ?? part?.props ?? {});
+				// If props for the part exist, merge the options into the existing props
+				else foundry.utils.mergeObject(this.#props[partId], options?.props ?? {}, { inplace: true, insertKeys: true});
 
-				// Get the Vue Instance for the Part if it doesn't exist or force is true
-				if (!this.#instances[part.id] || options?.force === true) {
-					if (this.constructor.DEBUG) console.log(`VueApplicationMixin | _renderHTML | Setting Up Vue Instance ${part.id} |`);
-					// Get the Vue Instance for the Part
-					const App = await (part?.app ?? part?.component ?? part?.template);
-					// Get the props for the Part using the options or the part props
-					this.#props[part.id] = reactive(options?.props ?? part?.props ?? {});
-
-					// If not a Vue Instance, create one
-					this.#instances[part.id] = createApp({
-						render: () => h(App, {...this.#props[part.id] })
-					});
-				}
-				if (this.constructor.DEBUG) console.log(`VueApplicationMixin | _renderHTML | Vue Instance ${part.id} |`, this.#instances[part.id], this.#props[part.id])
-
-				// Add Vue Instance to Rendered Object
-				rendered[key] = this.#instances[part.id]
+				// Get the Part and add it to the rendered object
+				rendered[partId] = await (part?.app ?? part?.component ?? part?.template);
 			}
-			if (this.constructor.DEBUG) console.log(`VueApplicationMixin | _renderHTML | Vue Instances |`, rendered);
+
+			if (this.constructor.DEBUG) console.log(`VueApplicationMixin | _renderHTML | Vue Instances |`, this.#instance);
 			return rendered;
 		}
 
@@ -127,58 +109,66 @@ export function VueApplicationMixin(BaseApplication) {
 		 */
 		_replaceHTML(result, content, options) {
 			if (this.constructor.DEBUG) console.log(`VueApplicationMixin | _replaceHTML |`, result, content, options);
-			for (const [key, part] of Object.entries(this.constructor.PARTS)) {
-				const target = content.querySelector(`[data-application-part="${key}"]`);
 
-				// If part is not in options.parts, skip it
-				if (!options.parts.includes(key)) continue;
-
-				// Since Vue Components shouldnt be replaced, warn the user
-				if (target && (options?.force ?? false) === false) {
-					foundry.utils.mergeObject(this.#props[part.id], options?.props ?? {}, { inplace: true, insertKeys: true});
-					//this.#props[part.id].title = options?.props?.title ?? this.#props[part.id].title;
-					if (this.constructor.DEBUG) console.log(`VueApplicationMixin | _replaceHTML | Update Vue Part |`, target, part.id, this.#instances[part.id], this.#props[part.id]);
-					continue;
-				}
-				// TODO: Add a way to update the Vue Instance with new Data
-				// ?? Maybe using a method like this.#instances[part.id].update(data)
-				// ?? where data is options.data or something similar??
-
-				// Attach Container for Part if it doesn't exist
-				if (!target) content.insertAdjacentHTML('beforeend', `<div data-application-part="${key}">$</div>`);
+			// Check if the Vue Instance exists, if not create it
+			if (!this.#instance) {
+				const Instance = this;
+				this.#instance = createApp({
+					render: () => Object.entries(result).map(([key, value]) =>
+						h('div', {
+							// Add a data attribute dynamically
+							'data-application-part': key,
+						}, [
+							// Insert the component inside this div along with the props for that component
+							h(value, { ...this.#props[key] })
+						])
+					)
+				}).mixin({
+					updated() {
+						// Resize the application window after the Vue Instance is updated
+						if (Instance?.options?.position?.height === "auto") Instance.setPosition({ height: "auto" });
+					}
+				});;
 
 				// Attach Part Listeners
-				this._attachPartListeners(content, part.id, this.#instances[part.id], options);
+				this._attachPartListeners(content, options);
+
+				console.log(`VueApplicationMixin | _replaceHTML | Mount Vue Instance |`, this.#instance);
 
 				// Mount the Vue Instance
-				this.#instances[part.id].mount(content.querySelector(`[data-application-part="${key}"]`));
-
-				if (this.constructor.DEBUG) console.log(`VueApplicationMixin | _replaceHTML | Mount Vue Part |`, part.id, this.#instances[part.id], this.#props[part.id]);
+				this.#instance.mount(content);
 			}
 		}
 
 
+		
 		/**
-		 * Attaches form submission and change event listeners to the specified Vue element for a given part.
+		 * Attaches event listeners to the Vue Instance.
 		 *
-		 * @param {HTMLElement} content - The content of the part.
-		 * @param {string} partId - The ID of the part.
-		 * @param {Vue} vueElement - The Vue element to attach the listeners to.
-		 * @param {Object} options - Additional options for attaching the listeners.
+		 * @param {HTMLElement} content - The content element.
+		 * @param {Object} options - The options object.
 		 */
-		_attachPartListeners(content, partId, vueElement, options) {
-			const part = this.constructor.PARTS[partId];
+		_attachPartListeners(content, options) {
+			// Attach event listeners to the Vue Instance
+			// -- Attach the onChange event listener
+			this.#instance.provide('onChange', (componentInstance, ...args) => {
+				this.#onChangeForm.bind(this, componentInstance.target.closest('[data-application-part]'), componentInstance)(...args);
+			});
+			// -- Attach the onInput event listener
+			this.#instance.provide('onInput', (componentInstance, ...args) => {
+				this.#onChangeForm.bind(this, componentInstance.target.closest('[data-application-part]'), componentInstance)(...args);
+			});
+			// -- Attach the onSubmit event listener
+			this.#instance.provide('onSubmit', (componentInstance, ...args) => {
+				this.#onSubmitForm.bind(this, componentInstance.target.closest('[data-application-part]'), componentInstance)(...args);
+			});
 
-			// Attach form submission handlers
-			if (part.forms) {
-				for (const [selector, formConfig] of Object.entries(part.forms)) {
-					vueElement.provide('onSubmit', this.#onSubmitForm.bind(this, content, `[data-application-part="${partId}"] ${selector}`, formConfig, new Event('change')));
-					vueElement.provide('onChange', this.#onChangeForm.bind(this, content, `[data-application-part="${partId}"] ${selector}`, formConfig, new Event('change')));
+			// Attach this.constructor.DEFAULT_OPTIONS.actions to the Vue Instance
+			if (this.constructor.DEFAULT_OPTIONS?.actions) {
+				// Loop through the actions and bind them to the Vue Instance
+				for (const [key, action] of Object.entries(this.constructor.DEFAULT_OPTIONS.actions)) {
+					this.#instance.provide(key, action.bind(this));
 				}
-			// Not really needed, but figured it would be nice to provide instead of having an error in the console if someone injecting one of the options into a component
-			}else{
-				vueElement.provide('onSubmit', () => console.warn("VueApplicationMixin | onSubmit | No forms found for part", partId));
-				vueElement.provide('onChange', () => console.warn("VueApplicationMixin | onChange | No forms found for part", partId));
 			}
 		}
 
@@ -189,52 +179,77 @@ export function VueApplicationMixin(BaseApplication) {
 		 * @returns {Promise<BaseApplication>} - A Promise which resolves to the rendered Application instance.
 		 */
 		async close(options = {}) {
-			// Loop through Instances and unmount them
-			for (const [key, instance] of Object.entries(this.#instances)) {
-				await instance.unmount();
-				delete this.#instances[key];
-			}
+			// Unmount the Vue Instance
+			if (this.#instance) this.#instance.unmount();
 
 			// Call the close method of the base application
 			await super.close(options);
 		}
 
 
+
 		/**
-		 * Handles form submission.
+		 * Handles the form submission event.
 		 *
 		 * @private
-		 * @param {HTMLFormElement} form - The form element.
-		 * @param {ApplicationFormSubmission} config - The configuration object.
-		 * @param {Function} config.handler - The handler function to be called on form submission.
-		 * @param {boolean} config.closeOnSubmit - Whether to close the form on submission.
-		 * @param {Event|SubmitEvent} event - The form submission event.
-		 * @returns {Promise<void>} - A promise that resolves when the form submission is complete.
+		 * @param {HTMLElement} htmlElement - The HTML element that triggered the event.
+		 * @param {Event} event - The form submission event.
+		 * @returns {Promise<void>} - A promise that resolves when the form submission is handled.
 		 */
-		async #onSubmitForm(content, selector, config, event) {
+		async #onSubmitForm(htmlElement, event) {
 			event.preventDefault();
 
-			const form = content.querySelector(selector);
-			const { handler, closeOnSubmit } = config;
-			const formData = new FormDataExtended(form);
-			if (handler instanceof Function) await handler.call(this, event, form, formData);
-			if (closeOnSubmit) await this.close();
+			// Get the part ID from the data attribute
+			const partId = htmlElement?.dataset?.applicationPart;
+			// Get the part from the PARTS object
+			const part = this.constructor.PARTS[partId];
+
+			// Skip if part is not found
+			if (!part?.forms) return (console.warn("VueApplicationMixin | onSubmitForm | No forms found for part", partId));
+
+			// Loop through the forms and check if the form is found
+			for (const [selector, formConfig] of Object.entries(part.forms)) {
+				const form = htmlElement.matches(selector) ? htmlElement : htmlElement.querySelector(selector);
+
+				// Skip if form is not found
+				if (!form) return;
+
+				// Get the form data and call the handler function
+				const { handler, closeOnSubmit } = formConfig;
+				const formData = new FormDataExtended(form);
+				if (handler instanceof Function) await handler.call(this, event, form, formData);
+				// Close the form if closeOnSubmit is true
+				if (closeOnSubmit) await this.close();
+			}
 		}
 
-
 		/**
-		 * Handles the change event of a form.
+		 * Handles the change event for a form element.
 		 *
 		 * @private
-		 * @param {HTMLFormElement} form - The form element.
-		 * @param {ApplicationFormSubmission} config - The configuration object.
-		 * @param {boolean} config.submitOnChange - Whether to submit the form on change.
-		 * @param {Event|ChangeEvent} event - The change event object.
+		 * @param {HTMLElement} htmlElement - The HTML element that triggered the change event.
+		 * @param {Event} event - The change event object.
 		 * @returns {void}
 		 */
-		#onChangeForm(content, selector, config, event) {
-			const form = content.querySelector(selector);
-			if (config?.submitOnChange) this.#onSubmitForm(content, selector, config, event);
+		#onChangeForm(htmlElement, event) {
+			// Get the part ID from the data attribute
+			const partId = htmlElement?.dataset?.applicationPart;
+			// Get the part from the PARTS object
+			const part = this.constructor.PARTS[partId];
+
+			// Skip if part is not found
+			if (!part?.forms) return (console.warn("VueApplicationMixin | onChangeForm | No forms found for part", partId));
+
+			// Loop through the forms and check if the form is found
+			for (const [selector, formConfig] of Object.entries(part.forms)) {
+				const form = htmlElement.matches(selector) ? htmlElement : htmlElement.querySelector(selector);
+
+				// Skip if form is not found
+				if (!form) return;
+
+				// Call the handler function if it exists
+				if (formConfig?.submitOnChange) this.#onSubmitForm(htmlElement, event);
+			}
 		}
 	}
 
