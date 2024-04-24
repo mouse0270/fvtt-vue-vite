@@ -1,0 +1,665 @@
+
+button[data-v-1f43b5dc], a[data-v-1f43b5dc] {
+  display: block;
+  margin-bottom: 1em;
+}
+
+.red[data-v-a03658bd] {
+  color: red;
+}
+
+.editor[data-v-5ebb6791] {
+  height: 100vh;
+  display: flex;
+}
+.input[data-v-5ebb6791],
+.output[data-v-5ebb6791] {
+  overflow: auto;
+  width: 50%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 0 20px;
+}
+.input[data-v-5ebb6791] {
+  border: none;
+  border-right: 1px solid #ccc;
+  color: black;
+  resize: none;
+  outline: none;
+  background-color: #f6f6f6;
+  font-size: 14px;
+  font-family: 'Monaco', courier, monospace;
+  padding: 20px;
+}
+code[data-v-5ebb6791] {
+  color: #f66;
+}
+
+a[data-v-384e13c0] {
+  text-decoration: none;
+  color: #42b883;
+}
+li[data-v-384e13c0] {
+  line-height: 1.5em;
+  margin-bottom: 20px;
+}
+.author[data-v-384e13c0],
+.date[data-v-384e13c0] {
+  font-weight: bold;
+}
+
+table[data-v-eb4f16b7] {
+  border: 2px solid #42b983;
+  border-radius: 3px;
+  background-color: #fff;
+  margin: 0 !important;
+  color: black;
+}
+th[data-v-eb4f16b7] {
+  background-color: #42b983;
+  color: rgba(255, 255, 255, 0.66) !important;
+  cursor: pointer;
+  user-select: none;
+  text-shadow: none !important;
+}
+td[data-v-eb4f16b7] {
+  background-color: #f9f9f9;
+}
+th[data-v-eb4f16b7],
+td[data-v-eb4f16b7] {
+  min-width: 120px;
+  padding: 10px 20px;
+}
+th.active[data-v-eb4f16b7] {
+  color: #fff;
+}
+th.active .arrow[data-v-eb4f16b7] {
+  opacity: 1;
+}
+.arrow[data-v-eb4f16b7] {
+  display: inline-block;
+  vertical-align: middle;
+  width: 0;
+  height: 0;
+  margin-left: 5px;
+  opacity: 0.66;
+}
+.arrow.asc[data-v-eb4f16b7] {
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 4px solid #fff;
+}
+.arrow.dsc[data-v-eb4f16b7] {
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid #fff;
+}
+
+.item {
+  cursor: pointer;
+  line-height: 1.5;
+}
+.bold {
+  font-weight: bold;
+}
+
+.modal-mask[data-v-845e2820] {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  transition: opacity 0.3s ease;
+}
+.modal-container[data-v-845e2820] {
+  width: 300px;
+  margin: auto;
+  padding: 20px 30px;
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+  transition: all 0.3s ease;
+}
+.modal-header h3[data-v-845e2820] {
+  margin-top: 0;
+  color: #42b983;
+}
+.modal-body[data-v-845e2820] {
+  margin: 20px 0;
+}
+.modal-default-button[data-v-845e2820] {
+  float: right;
+}
+
+/*
+ * The following styles are auto-applied to elements with
+ * transition="modal" when their visibility is toggled
+ * by Vue.js.
+ *
+ * You can easily play with the modal transition by editing
+ * these styles.
+ */
+.modal-enter-from[data-v-845e2820] {
+  opacity: 0;
+}
+.modal-leave-to[data-v-845e2820] {
+  opacity: 0;
+}
+.modal-enter-from .modal-container[data-v-845e2820],
+.modal-leave-to .modal-container[data-v-845e2820] {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+.container[data-v-7d8a570a] {
+  position: relative;
+  padding: 0;
+  list-style-type: none;
+}
+.item[data-v-7d8a570a] {
+  width: 100%;
+  height: 30px;
+  background-color: #f3f3f3;
+  border: 1px solid #666;
+  box-sizing: border-box;
+}
+
+/* 1. declare transition */
+.fade-move[data-v-7d8a570a],
+.fade-enter-active[data-v-7d8a570a],
+.fade-leave-active[data-v-7d8a570a] {
+  transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+/* 2. declare enter from and leave to state */
+.fade-enter-from[data-v-7d8a570a],
+.fade-leave-to[data-v-7d8a570a] {
+  opacity: 0;
+  transform: scaleY(0.01) translate(30px, 0);
+}
+
+/* 3. ensure leaving items are taken out of layout flow so that moving
+      animations can be calculated correctly. */
+.fade-leave-active[data-v-7d8a570a] {
+  position: absolute;
+}
+
+.todoapp[data-v-6f3c918b] {
+	background: #fff;
+	margin: 130px 0 40px 0;
+	position: relative;
+	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
+	            0 25px 50px 0 rgba(0, 0, 0, 0.1);
+}
+.todoapp input[data-v-6f3c918b]::-webkit-input-placeholder {
+	font-style: italic;
+	font-weight: 400;
+	color: rgba(0, 0, 0, 0.4);
+}
+.todoapp input[data-v-6f3c918b]::-moz-placeholder {
+	font-style: italic;
+	font-weight: 400;
+	color: rgba(0, 0, 0, 0.4);
+}
+.todoapp input[data-v-6f3c918b]::input-placeholder {
+	font-style: italic;
+	font-weight: 400;
+	color: rgba(0, 0, 0, 0.4);
+}
+.todoapp h1[data-v-6f3c918b] {
+	position: absolute;
+	top: -140px;
+	width: 100%;
+	font-size: 80px;
+	font-weight: 200;
+	text-align: center;
+	color: #b83f45;
+	-webkit-text-rendering: optimizeLegibility;
+	-moz-text-rendering: optimizeLegibility;
+	text-rendering: optimizeLegibility;
+}
+.new-todo[data-v-6f3c918b],
+.edit[data-v-6f3c918b] {
+	position: relative;
+	margin: 0;
+	width: 100%;
+	font-size: 24px;
+	font-family: inherit;
+	font-weight: inherit;
+	line-height: 1.4em;
+	color: inherit;
+	padding: 6px;
+	border: 1px solid #999;
+	box-shadow: inset 0 -1px 5px 0 rgba(0, 0, 0, 0.2);
+	box-sizing: border-box;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+.new-todo[data-v-6f3c918b] {
+	padding: 16px 16px 16px 60px;
+	height: 65px;
+	border: none;
+	background: rgba(0, 0, 0, 0.003);
+	box-shadow: inset 0 -2px 1px rgba(0,0,0,0.03);
+}
+.main[data-v-6f3c918b] {
+	position: relative;
+	z-index: 2;
+	border-top: 1px solid #e6e6e6;
+}
+.toggle-all[data-v-6f3c918b] {
+	width: 1px;
+	height: 1px;
+	border: none; /* Mobile Safari */
+	opacity: 0;
+	position: absolute;
+	right: 100%;
+	bottom: 100%;
+}
+.toggle-all + label[data-v-6f3c918b] {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 45px;
+	height: 65px;
+	font-size: 0;
+	position: absolute;
+	top: -65px;
+	left: -0;
+}
+.toggle-all + label[data-v-6f3c918b]:before {
+	content: '❯';
+	display: inline-block;
+	font-size: 22px;
+	color: #949494;
+	padding: 10px 27px 10px 27px;
+	-webkit-transform: rotate(90deg);
+	transform: rotate(90deg);
+}
+.toggle-all:checked + label[data-v-6f3c918b]:before {
+	color: #484848;
+}
+.todo-list[data-v-6f3c918b] {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.todo-list li[data-v-6f3c918b] {
+	position: relative;
+	font-size: 24px;
+	border-bottom: 1px solid #ededed;
+}
+.todo-list li[data-v-6f3c918b]:last-child {
+	border-bottom: none;
+}
+.todo-list li.editing[data-v-6f3c918b] {
+	border-bottom: none;
+	padding: 0;
+}
+.todo-list li.editing .edit[data-v-6f3c918b] {
+	display: block;
+	width: calc(100% - 43px);
+	padding: 12px 16px;
+	margin: 0 0 0 43px;
+}
+.todo-list li.editing .view[data-v-6f3c918b] {
+	display: none;
+}
+.todo-list li .toggle[data-v-6f3c918b] {
+	text-align: center;
+	width: 40px;
+	/* auto, since non-WebKit browsers doesn't support input styling */
+	height: auto;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	margin: auto 0;
+	border: none; /* Mobile Safari */
+	-webkit-appearance: none;
+	appearance: none;
+}
+.todo-list li .toggle[data-v-6f3c918b] {
+	opacity: 0;
+}
+.todo-list li .toggle + label[data-v-6f3c918b] {
+	/*
+		Firefox requires `#` to be escaped - https://bugzilla.mozilla.org/show_bug.cgi?id=922433
+		IE and Edge requires *everything* to be escaped to render, so we do that instead of just the `#` - https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/7157459/
+	*/
+	background-image: url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%22-10%20-18%20100%20135%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2250%22%20fill%3D%22none%22%20stroke%3D%22%23949494%22%20stroke-width%3D%223%22/%3E%3C/svg%3E');
+	background-repeat: no-repeat;
+	background-position: center left;
+}
+.todo-list li .toggle:checked + label[data-v-6f3c918b] {
+	background-image: url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%22-10%20-18%20100%20135%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2250%22%20fill%3D%22none%22%20stroke%3D%22%2359A193%22%20stroke-width%3D%223%22%2F%3E%3Cpath%20fill%3D%22%233EA390%22%20d%3D%22M72%2025L42%2071%2027%2056l-4%204%2020%2020%2034-52z%22%2F%3E%3C%2Fsvg%3E');
+}
+.todo-list li label[data-v-6f3c918b] {
+	word-break: break-all;
+	padding: 15px 15px 15px 60px;
+	display: block;
+	line-height: 1.2;
+	transition: color 0.4s;
+	font-weight: 400;
+	color: #484848;
+}
+.todo-list li.completed label[data-v-6f3c918b] {
+	color: #949494;
+	text-decoration: line-through;
+}
+.todo-list li .destroy[data-v-6f3c918b] {
+	display: none;
+	position: absolute;
+	top: 0;
+	right: 10px;
+	bottom: 0;
+	width: 40px;
+	height: 40px;
+	margin: auto 0;
+	font-size: 30px;
+	color: #949494;
+	transition: color 0.2s ease-out;
+}
+.todo-list li .destroy[data-v-6f3c918b]:hover,
+.todo-list li .destroy[data-v-6f3c918b]:focus {
+	color: #C18585;
+}
+.todo-list li .destroy[data-v-6f3c918b]:after {
+	content: '×';
+	display: block;
+	height: 100%;
+	line-height: 1.1;
+}
+.todo-list li:hover .destroy[data-v-6f3c918b] {
+	display: block;
+}
+.todo-list li .edit[data-v-6f3c918b] {
+	display: none;
+}
+.todo-list li.editing[data-v-6f3c918b]:last-child {
+	margin-bottom: -1px;
+}
+.footer[data-v-6f3c918b] {
+	padding: 10px 15px;
+	height: 20px;
+	text-align: center;
+	font-size: 15px;
+	border-top: 1px solid #e6e6e6;
+}
+.footer[data-v-6f3c918b]:before {
+	content: '';
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	height: 50px;
+	overflow: hidden;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2),
+	            0 8px 0 -3px #f6f6f6,
+	            0 9px 1px -3px rgba(0, 0, 0, 0.2),
+	            0 16px 0 -6px #f6f6f6,
+	            0 17px 2px -6px rgba(0, 0, 0, 0.2);
+}
+.todo-count[data-v-6f3c918b] {
+	float: left;
+	text-align: left;
+}
+.todo-count strong[data-v-6f3c918b] {
+	font-weight: 300;
+}
+.filters[data-v-6f3c918b] {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	position: absolute;
+	right: 0;
+	left: 0;
+}
+.filters li[data-v-6f3c918b] {
+	display: inline;
+}
+.filters li a[data-v-6f3c918b] {
+	color: inherit;
+	margin: 3px;
+	padding: 3px 7px;
+	text-decoration: none;
+	border: 1px solid transparent;
+	border-radius: 3px;
+}
+.filters li a[data-v-6f3c918b]:hover {
+	border-color: #DB7676;
+}
+.filters li a.selected[data-v-6f3c918b] {
+	border-color: #CE4646;
+}
+.clear-completed[data-v-6f3c918b],
+html .clear-completed[data-v-6f3c918b]:active {
+	float: right;
+	position: relative;
+	line-height: 19px;
+	text-decoration: none;
+	cursor: pointer;
+}
+.clear-completed[data-v-6f3c918b]:hover {
+	text-decoration: underline;
+}
+.info[data-v-6f3c918b] {
+	margin: 65px auto 0;
+	color: #4d4d4d;
+	font-size: 11px;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+	text-align: center;
+}
+.info p[data-v-6f3c918b] {
+	line-height: 1;
+}
+.info a[data-v-6f3c918b] {
+	color: inherit;
+	text-decoration: none;
+	font-weight: 400;
+}
+.info a[data-v-6f3c918b]:hover {
+	text-decoration: underline;
+}
+
+/*
+	Hack to remove background from Mobile Safari.
+	Can't use it globally since it destroys checkboxes in Firefox
+*/
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+.toggle-all[data-v-6f3c918b],
+	.todo-list li .toggle[data-v-6f3c918b] {
+		background: none;
+}
+.todo-list li .toggle[data-v-6f3c918b] {
+		height: 40px;
+}
+}
+@media (max-width: 430px) {
+.footer[data-v-6f3c918b] {
+		height: 50px;
+}
+.filters[data-v-6f3c918b] {
+		bottom: 10px;
+}
+}
+[data-v-6f3c918b]:focus,
+.toggle:focus + label[data-v-6f3c918b],
+.toggle-all:focus + label[data-v-6f3c918b] {
+	box-shadow: 0 0 2px 2px #CF7D7D;
+	outline: 0;
+}
+
+.application ul[data-v-0a8d8993] {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	list-style-type: none;
+	padding: 0;
+}
+.application ul li[data-v-0a8d8993] {
+	align-items: center;
+	display: flex;
+	gap: 0.5rem;
+	margin: 0px;
+}
+.application ul li > div[data-v-0a8d8993] {
+	flex: 1 1 auto;
+}
+.application ul li img[data-v-0a8d8993] {
+	border-radius: 50%;
+	height: 50px;
+	width: 50px;
+}
+.application ul li h3[data-v-0a8d8993] {
+	align-items: center;
+	display: flex;
+	gap: 0.5rem;
+	margin-bottom: 0.5rem;
+	padding-bottom: 0.5rem;
+span[data-v-0a8d8993] {
+		font-size: var(--font-size-16);
+}
+}
+.application ul li h3[data-v-0a8d8993]:before {
+	background-color: var(--player-color, rgba(0, 0, 0, 0));
+	border: 2px solid var(--player-color, #000);
+	content: "";
+	border-radius: 50%;
+	display: inline-block;
+	height: 15px;
+	width: 15px;
+}
+
+
+
+/* 1. declare transition */
+.fade-move[data-v-0a8d8993],
+.fade-enter-active[data-v-0a8d8993],
+.fade-leave-active[data-v-0a8d8993] {
+  transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+/* 2. declare enter from and leave to state */
+.fade-enter-from[data-v-0a8d8993],
+.fade-leave-to[data-v-0a8d8993] {
+  opacity: 0;
+  transform: scaleY(0.01) translate(30px, 0);
+}
+
+/* 3. ensure leaving items are taken out of layout flow so that moving
+      animations can be calculated correctly. */
+.fade-leave-active[data-v-0a8d8993] {
+  position: absolute;
+}
+
+#app-fvtt-vue-vite-VueExamples .window-content {
+	padding: 0;
+}
+
+.app[data-v-80a77d36] {
+	border-radius: 0;
+	display: flex;
+	margin: 0;
+	padding: 0;
+}
+.sidebar[data-v-80a77d36] {
+	border-right: 1px solid var(--color-underline-header);
+	width: 200px;
+ul[data-v-80a77d36] {
+		margin: 0;
+		padding: 0;
+h3[data-v-80a77d36] {
+			margin: 0;
+			padding: 0.5rem 1rem;
+}
+li > ul > li[data-v-80a77d36] {
+			cursor: pointer;
+			list-style-type: none;
+			padding: 0.5rem 1rem;
+			padding-left: 1.5rem;
+}
+}
+}
+.main[data-v-80a77d36] {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	padding: 0;
+> h1[data-v-80a77d36] {
+		flex: 0 0 auto;
+		margin: 0;
+		padding: 0 1rem;
+}
+> .component[data-v-80a77d36] {
+		flex: 1;
+		max-height: 60vh;
+		overflow: auto;
+		padding: 1rem;
+}
+> footer[data-v-80a77d36] {
+		border-top: 1px solid var(--color-underline-header);
+		flex: 0 0 auto;
+		padding: 0.5rem 1rem;
+a[data-v-80a77d36] {
+			display: inline-block;
+			margin: 0;
+}
+}
+}
+
+table[data-v-9f784e77] {
+  border: 2px solid #42b983;
+  border-radius: 3px;
+  background-color: #fff;
+}
+.application table[data-v-9f784e77] {
+	margin: 0;
+}
+th[data-v-9f784e77] {
+  background-color: #42b983;
+  color: rgba(255, 255, 255, 0.66);
+  cursor: pointer;
+  user-select: none;
+}
+td[data-v-9f784e77] {
+  background-color: #f9f9f9;
+  color: #333;
+}
+th[data-v-9f784e77],
+td[data-v-9f784e77] {
+  min-width: 120px;
+  padding: 10px 20px;
+}
+th.active[data-v-9f784e77] {
+  color: #fff;
+}
+th.active .arrow[data-v-9f784e77] {
+  opacity: 1;
+}
+.arrow[data-v-9f784e77] {
+  display: inline-block;
+  vertical-align: middle;
+  width: 0;
+  height: 0;
+  margin-left: 5px;
+  opacity: 0.66;
+}
+.arrow.asc[data-v-9f784e77] {
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 4px solid #fff;
+}
+.arrow.dsc[data-v-9f784e77] {
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid #fff;
+}
+
+.card[data-v-0b8cab77] {
+	border: 1px solid black;
+	padding: 10px;
+	margin-bottom: 10px;
+}
