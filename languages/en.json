@@ -1,5 +1,37 @@
 {
 	"fvtt-vue-vite": {
-		"title": "Foundry VTT - Vue.js | VITE"
+		"title": "Foundry VTT - Vue.js | VITE",
+
+		"EXAMPLES": {
+			"BASIC": {
+				"TITLE": "Basic",
+				"HELLO_WORLD": "Hello World",
+				"HANDLING_USER_INPUT": "Handling User Input",
+				"ATTRIBUTE_BINDINGS": "Attribute Bindings",
+				"CONDITIONALS_AND_LOOPS": "Conditionals and Loops",
+				"FORM_BINDINGS": "Form Bindings",
+				"SIMPLE_COMPONENT": "Simple Component"
+			},
+			"PRACTICAL": {
+				"TITLE": "Practical",
+				"MARKDOWN_EDITOR": "Markdown Editor",
+				"FETCHING_DATA": "Fetching Data",
+				"GRID_WITH_SORT_AND_FILTER": "Grid with Sort and Filter",
+				"TREE_VEIW": "Tree View",
+				"MODAL_WITH_TRANSITIONS": "Modal with Transitions",
+				"LIST_WITH_TRANSITIONS": "List with Transitions",
+				"TODOMVC": "TodoMVC"
+			},
+			"FOUNDRY_VTT": {
+				"TITLE": "Foundry VTT",
+				"PLAYERS": "Players",
+				"PLAYERS_LANG": {
+					"no_active_character": "Player Character Not Selected."
+				}
+			},
+			"FOOTER": {
+				"PROVIDED_BY": "Vue Example provided by <a href=\"{url}\" target=\"_blank\">{source} - {category} / {example}</a>"
+			}
+		}
 	}
 }

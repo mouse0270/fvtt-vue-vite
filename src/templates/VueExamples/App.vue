@@ -3,29 +3,36 @@
 		<div class="sidebar">
 			<ul>
 				<li v-for="category in Object.keys(sidebar)" :key="category">
-					<h3>{{ category }}</h3>
+					<h3>{{ localize(`${Module.id}.EXAMPLES.${category}.TITLE`) }}</h3>
 					<ul>
 						<li v-for="item in Object.keys(sidebar[category])" :key="item" @click="selected({ category, name: item })">
-							{{ item }}
+							{{ localize(`${Module.id}.EXAMPLES.${category}.${item}`) }}
 						</li>
 					</ul>
 				</li>
 			</ul>
 		</div>
 		<div class="main">
-			<h1>{{ category }} - {{ example }}</h1>
+			<h1>{{ localize(`${Module.id}.EXAMPLES.${category}.TITLE`) }} - {{ localize(`${Module.id}.EXAMPLES.${category}.${example}`) }}</h1>
 			<div class="component">
 				<component :is="selectedComponent"></component>
 			</div>	
 			<footer>
-				<p v-if="[`Basic`, `Practical`].includes(category)">Vue Example provided by <a :href="`https://vuejs.org/examples/#${example.toLowerCase().replace(' ', '-')}`" target="_blank">VueJs Examples - {{ category }} / {{ example }}</a></p>
+				<p v-if="[`BASIC`, `PRACTICAL`].includes(category)" v-html="localize(`${Module.id}.EXAMPLES.FOOTER.PROVIDED_BY`, {
+					source: [`BASIC`, `PRACTICAL`].includes(category) ? 'Vue.js' : 'Mouse0270',
+					url: footerLinks[category][example],
+					category: localize(`${Module.id}.EXAMPLES.${category}.TITLE`),
+					example: localize(`${Module.id}.EXAMPLES.${category}.${example}`)
+				})"></p>
 			</footer>
 		</div>
 	</div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { shallowRef, ref } from 'vue';
+import Module from '../../assets/scripts/module.mjs';
+import { localize } from '../../assets/scripts/libs/VueHelpers.mjs';
 // Basic Examples
 import ExampleBasicHelloWorld from './Exampes/Basic/HelloWorld/App.vue';
 import ExampleBasicHandlingUserInput from './Exampes/Basic/HandlingUserInput/App.vue';
@@ -43,34 +50,55 @@ import ExamplePracticalModalWithTransitions from './Exampes/Practical/ModalWithT
 import ExamplePracticalListWithTransitions from './Exampes/Practical/ListWithTransitions/App.vue';
 import ExamplePracticalTodoMVC from './Exampes/Practical/TodoMVC/App.vue';
 // Foundry VTT Examples
-
+import ExampleFoundryVTTPlayers from './Exampes/FoundryVTT/Players/App.vue';
 
 const sidebar = {
-	"Basic": {
-		"Hello World": ExampleBasicHelloWorld,
-		"Handling User Input": ExampleBasicHandlingUserInput,
-		"Attribute Bindings": ExampleBasicAttributeBindings,
-		"Conditionals and Loops": ExampleBasicConditionalsAndLoops,
-		"Form Bindings": ExampleBasicFormBindings,
-		"Simple Component": ExampleBasicSimpleComponent
+	"BASIC": {
+		"HELLO_WORLD": ExampleBasicHelloWorld,
+		"HANDLING_USER_INPUT": ExampleBasicHandlingUserInput,
+		"ATTRIBUTE_BINDINGS": ExampleBasicAttributeBindings,
+		"CONDITIONALS_AND_LOOPS": ExampleBasicConditionalsAndLoops,
+		"FORM_BINDINGS": ExampleBasicFormBindings,
+		"SIMPLE_COMPONENT": ExampleBasicSimpleComponent
 	},
-	"Practical": {
-		"Markdown Editor": ExamplePracticalMarkdownEditor,
-		"Fetching Data": ExamplePracticalFetchingData,
-		"Grid With Sort and Filter": ExamplePracticalGridWithSortAndFilter,
-		"Tree View": ExamplePracticalTreeView,
-		//"SVG Graph": ExamplePracticalSVGGraph
-		"Modal With Transitions": ExamplePracticalModalWithTransitions,
-		"List With Transitions": ExamplePracticalListWithTransitions,
-		"TodoMVC": ExamplePracticalTodoMVC
+	"PRACTICAL": {
+		"MARKDOWN_EDITOR": ExamplePracticalMarkdownEditor,
+		"FETCHING_DATA": ExamplePracticalFetchingData,
+		"GRID_WITH_SORT_AND_FILTER": ExamplePracticalGridWithSortAndFilter,
+		"TREE_VEIW": ExamplePracticalTreeView,
+		//"SVG_GRAPH": ExamplePracticalSVGGraph
+		"MODAL_WITH_TRANSITIONS": ExamplePracticalModalWithTransitions,
+		"LIST_WITH_TRANSITIONS": ExamplePracticalListWithTransitions,
+		"TODOMVC": ExamplePracticalTodoMVC
 	},
-	"Foundry VTT": {
-		"Hello World": ExampleBasicHelloWorld
+	"FOUNDRY_VTT": {
+		"PLAYERS": ExampleFoundryVTTPlayers
 	}
 }
-const selectedComponent = ref(sidebar.Basic["Hello World"]);
-const category = ref("Basic");
-const example = ref("Hello World");
+const footerLinks = {
+	"BASIC": {
+		"HELLO_WORLD": "https://vuejs.org/examples/#hello-world",
+		"HANDLING_USER_INPUT": "https://vuejs.org/examples/#handling-input",
+		"ATTRIBUTE_BINDINGS": "https://vuejs.org/examples/#attribute-bindings",
+		"CONDITIONALS_AND_LOOPS": "https://vuejs.org/examples/#conditionals-and-loops",
+		"FORM_BINDINGS": "https://vuejs.org/examples/#form-bindings",
+		"SIMPLE_COMPONENT": "https://vuejs.org/examples/#simple-component"
+	},
+	"PRACTICAL": {
+		"MARKDOWN_EDITOR": "https://vuejs.org/examples/#markdown",
+		"FETCHING_DATA": "https://vuejs.org/examples/#fetching-data",
+		"GRID_WITH_SORT_AND_FILTER": "https://vuejs.org/examples/#grid",
+		"TREE_VEIW": "https://vuejs.org/examples/#tree",
+		//"SSVG_GRAPH": "https://vuejs.org/examples/#svg-graph",
+		"MODAL_WITH_TRANSITIONS": "https://vuejs.org/examples/#modal",
+		"LIST_WITH_TRANSITIONS": "https://vuejs.org/examples/#list-transition",
+		"TODOMVC": "https://vuejs.org/examples/#todomvc"
+	}
+}
+
+const selectedComponent = shallowRef(sidebar.BASIC.HELLO_WORLD);
+const category = ref("BASIC");
+const example = ref("HELLO_WORLD");
 
 const selected = (item) => {
 	category.value = item.category;
@@ -129,7 +157,7 @@ const selected = (item) => {
 
 	> .component {
 		flex: 1;
-		max-height: 80vh;
+		max-height: 60vh;
 		overflow: auto;
 		padding: 1rem;
 	}
