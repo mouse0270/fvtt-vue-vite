@@ -51,6 +51,9 @@ import ExamplePracticalListWithTransitions from './Exampes/Practical/ListWithTra
 import ExamplePracticalTodoMVC from './Exampes/Practical/TodoMVC/App.vue';
 // Foundry VTT Examples
 import ExampleFoundryVTTPlayers from './Exampes/FoundryVTT/Players/App.vue';
+import ExampleFoundryVTTVueUse from './Exampes/FoundryVTT/VueUse/App.vue';
+import ExampleFoundryVTTPinia from './Exampes/FoundryVTT/Pinia/App.vue';
+import ExampleFoundryVTTVuetify from './Exampes/FoundryVTT/Vuetify/App.vue';
 
 const sidebar = {
 	"BASIC": {
@@ -72,7 +75,10 @@ const sidebar = {
 		"TODOMVC": ExamplePracticalTodoMVC
 	},
 	"FOUNDRY_VTT": {
-		"PLAYERS": ExampleFoundryVTTPlayers
+		"PLAYERS": ExampleFoundryVTTPlayers,
+		"VUEUSE": ExampleFoundryVTTVueUse,
+		"PINIA": ExampleFoundryVTTPinia,
+		"VUETIFY": ExampleFoundryVTTVuetify
 	}
 }
 const footerLinks = {

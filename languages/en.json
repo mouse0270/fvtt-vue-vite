@@ -27,7 +27,10 @@
 				"PLAYERS": "Players",
 				"PLAYERS_LANG": {
 					"no_active_character": "Player Character Not Selected."
-				}
+				},
+				"VUEUSE": "VueUse",
+				"PINIA": "Pinia",
+				"VUETIFY": "Vuetify"
 			},
 			"FOOTER": {
 				"PROVIDED_BY": "Vue Example provided by <a href=\"{url}\" target=\"_blank\">{source} - {category} / {example}</a>"

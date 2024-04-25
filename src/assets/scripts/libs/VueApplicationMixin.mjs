@@ -130,6 +130,17 @@ export function VueApplicationMixin(BaseApplication) {
 					}
 				});;
 
+				// Attach .use() plugins to the Vue Instance
+				for (const partId of options.parts) {
+					const part = this.constructor.PARTS[partId];
+					if (part?.use) {
+						for (const [key, plugin] of Object.entries(part.use)) {
+							console.log(`VueApplicationMixin | _replaceHTML | Mount Vue Instance | Use Plugin |`, key, plugin);
+							this.#instance.use(plugin.plugin, plugin?.options ?? {});
+						}
+					}
+				}
+
 				// Attach Part Listeners
 				this._attachPartListeners(content, options);
 
