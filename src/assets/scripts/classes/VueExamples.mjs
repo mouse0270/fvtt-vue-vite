@@ -42,6 +42,8 @@ export class VueExamples extends VueApplicationMixin(ApplicationV2) {
 
 	static DEBUG = true;
 
+	static SHADOWROOT = false;
+
 	static PARTS = {
 		app: {
 			id: "app",

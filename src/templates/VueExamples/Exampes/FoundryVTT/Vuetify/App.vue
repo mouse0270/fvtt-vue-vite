@@ -1,52 +1,28 @@
 <template>
-	<v-app>
-		<v-main>
+	<v-app id="inspire">
+		<v-main class="bg-grey-lighten-2">
 			<v-container>
-				<v-row justify="center">
-					<v-col cols="12" sm="8" md="6">
-						<v-card>
-							<v-card-title>
-								Welcome to Vuetify!
-							</v-card-title>
-							<v-card-text>
-								<v-text-field
-									v-model="message"
-									label="Enter a message"
-								></v-text-field>
-								<v-btn @click="showMessage">Show Message</v-btn>
-								<v-alert
-									v-if="showAlert"
-									type="success"
-									dismissible
-									@input="showAlert = false"
-								>
-									{{ message }}
-								</v-alert>
-							</v-card-text>
-						</v-card>
-					</v-col>
+				<v-row>
+					<template v-for="n in 4" :key="n">
+						<v-col class="mt-2" cols="12">
+							<strong>Category {{ n }}</strong>
+						</v-col>
+
+						<v-col v-for="j in 6" :key="`${n}${j}`" cols="6" md="2">
+							<v-skeleton-loader type="article"></v-skeleton-loader>
+						</v-col>
+					</template>
 				</v-row>
 			</v-container>
 		</v-main>
 	</v-app>
 </template>
 
-<script>
-export default {
-	data() {
-		return {
-			message: '',
-			showAlert: false
-		};
-	},
-	methods: {
-		showMessage() {
-			if (this.message) {
-				this.showAlert = true;
-			}
-		}
-	}
-};
+
+<script setup>
+import { ref } from 'vue'
+
+const drawer = ref(null)
 </script>
 
 <style>

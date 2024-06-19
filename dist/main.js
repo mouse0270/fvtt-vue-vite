@@ -8899,7 +8899,12 @@ function VueApplicationMixin(BaseApplication) {
      * Indicates whether the application is in debug mode.
      * @type {boolean}
      */
-    static DEBUG = false;
+    static DEBUG = true;
+    /**
+     * Indicates whether the application should be attached to the shadow dom.
+     * @type {boolean}
+     */
+    static SHADOWROOT = false;
     /**
      * The parts of the Vue application.
      * @type {Object<string, *>}
@@ -8995,22 +9000,41 @@ function VueApplicationMixin(BaseApplication) {
           )
         }).mixin({
           updated() {
+            if (Instance.constructor.DEBUG)
+              console.log(`VueApplicationMixin | _replaceHTML | Vue Instance Updated |`, this, Instance?.options);
             if (Instance?.options?.position?.height === "auto")
               Instance.setPosition({ height: "auto" });
+            Instance.render();
           }
         });
         for (const partId of options.parts) {
           const part = this.constructor.PARTS[partId];
           if (part?.use) {
             for (const [key, plugin] of Object.entries(part.use)) {
-              console.log(`VueApplicationMixin | _replaceHTML | Mount Vue Instance | Use Plugin |`, key, plugin);
+              if (this.constructor.DEBUG)
+                console.log(`VueApplicationMixin | _replaceHTML | Mount Vue Instance | Use Plugin |`, key, plugin);
               this.#instance.use(plugin.plugin, plugin?.options ?? {});
             }
           }
         }
         this._attachPartListeners(content, options);
-        console.log(`VueApplicationMixin | _replaceHTML | Mount Vue Instance |`, this.#instance);
-        this.#instance.mount(content);
+        if (this.constructor.DEBUG)
+          console.log(`VueApplicationMixin | _replaceHTML | Mount Vue Instance |`, this.#instance);
+        if (this.constructor.SHADOWROOT)
+          content.attachShadow({ mode: "open" });
+        let root = this.constructor.SHADOWROOT ? content.shadowRoot : content;
+        if (this.constructor.SHADOWROOT) {
+          const link = document.createElement("link");
+          link.rel = "stylesheet";
+          link.href = "/modules/fvtt-vue-vite/dist/style.css";
+          content.shadowRoot.appendChild(link);
+          const mountPoint = document.createElement("div");
+          root.appendChild(mountPoint);
+          root = mountPoint;
+        }
+        if (this.constructor.DEBUG)
+          console.log(`VueApplicationMixin | _replaceHTML | Root |`, root);
+        this.#instance.mount(root);
       }
     }
     /**
@@ -35865,12 +35889,8 @@ const usePlayerStore = defineStore(`${Module.id}.users`, {
     inactiveUserCount: (state) => state.inactiveUsers.length
   }
 });
-const localize = (stringId, data = null) => {
-  return typeof data !== "object" ? game.i18n.localize(stringId, data) : game.i18n.format(stringId, data);
-};
-const formField = (field, options) => {
-  return HandlebarsHelpers.formField(field, options);
-};
+const localize = (value, data = {}) => Handlebars.helpers.localize(value, { hash: data });
+const formField = (field, options) => Handlebars.helpers.formField(field, { hash: options });
 const _sfc_main$o = {
   __name: "App",
   setup(__props) {
@@ -37473,7 +37493,7 @@ const _sfc_main$6 = {
 };
 const _hoisted_1$4 = /* @__PURE__ */ createBaseVNode("h1", null, "VueUse Features Example", -1);
 const _hoisted_2$4 = /* @__PURE__ */ createBaseVNode("h1", null, "Mouse", -1);
-function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   return openBlock(), createElementBlock("div", null, [
     _hoisted_1$4,
     createBaseVNode("p", null, "Current window width: " + toDisplayString($setup.windowWidth) + "px", 1),
@@ -37489,7 +37509,7 @@ function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
     ])
   ]);
 }
-const ExampleFoundryVTTVueUse = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["render", _sfc_render$1]]);
+const ExampleFoundryVTTVueUse = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["render", _sfc_render]]);
 const useCounterStore = defineStore(`${Module.id}.counter`, () => {
   const count = ref(0);
   const doubleCount = computed(() => count.value * 2);
@@ -37539,84 +37559,49 @@ const _sfc_main$5 = {
   }
 };
 const _sfc_main$4 = {
-  data() {
-    return {
-      message: "",
-      showAlert: false
-    };
-  },
-  methods: {
-    showMessage() {
-      if (this.message) {
-        this.showAlert = true;
-      }
-    }
-  }
-};
-function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
-  const _component_v_card_title = resolveComponent("v-card-title");
-  const _component_v_text_field = resolveComponent("v-text-field");
-  const _component_v_btn = resolveComponent("v-btn");
-  const _component_v_alert = resolveComponent("v-alert");
-  const _component_v_card_text = resolveComponent("v-card-text");
-  const _component_v_card = resolveComponent("v-card");
-  const _component_v_col = resolveComponent("v-col");
-  const _component_v_row = resolveComponent("v-row");
-  const _component_v_container = resolveComponent("v-container");
-  const _component_v_main = resolveComponent("v-main");
-  const _component_v_app = resolveComponent("v-app");
-  return openBlock(), createBlock(_component_v_app, null, {
-    default: withCtx(() => [
-      createVNode(_component_v_main, null, {
+  __name: "App",
+  setup(__props) {
+    ref(null);
+    return (_ctx, _cache) => {
+      const _component_v_col = resolveComponent("v-col");
+      const _component_v_skeleton_loader = resolveComponent("v-skeleton-loader");
+      const _component_v_row = resolveComponent("v-row");
+      const _component_v_container = resolveComponent("v-container");
+      const _component_v_main = resolveComponent("v-main");
+      const _component_v_app = resolveComponent("v-app");
+      return openBlock(), createBlock(_component_v_app, { id: "inspire" }, {
         default: withCtx(() => [
-          createVNode(_component_v_container, null, {
+          createVNode(_component_v_main, { class: "bg-grey-lighten-2" }, {
             default: withCtx(() => [
-              createVNode(_component_v_row, { justify: "center" }, {
+              createVNode(_component_v_container, null, {
                 default: withCtx(() => [
-                  createVNode(_component_v_col, {
-                    cols: "12",
-                    sm: "8",
-                    md: "6"
-                  }, {
+                  createVNode(_component_v_row, null, {
                     default: withCtx(() => [
-                      createVNode(_component_v_card, null, {
-                        default: withCtx(() => [
-                          createVNode(_component_v_card_title, null, {
+                      (openBlock(), createElementBlock(Fragment, null, renderList(4, (n) => {
+                        return openBlock(), createElementBlock(Fragment, { key: n }, [
+                          createVNode(_component_v_col, {
+                            class: "mt-2",
+                            cols: "12"
+                          }, {
                             default: withCtx(() => [
-                              createTextVNode(" Welcome to Vuetify! ")
+                              createBaseVNode("strong", null, "Category " + toDisplayString(n), 1)
                             ]),
-                            _: 1
-                          }),
-                          createVNode(_component_v_card_text, null, {
-                            default: withCtx(() => [
-                              createVNode(_component_v_text_field, {
-                                modelValue: $data.message,
-                                "onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => $data.message = $event),
-                                label: "Enter a message"
-                              }, null, 8, ["modelValue"]),
-                              createVNode(_component_v_btn, { onClick: $options.showMessage }, {
-                                default: withCtx(() => [
-                                  createTextVNode("Show Message")
-                                ]),
-                                _: 1
-                              }, 8, ["onClick"]),
-                              $data.showAlert ? (openBlock(), createBlock(_component_v_alert, {
-                                key: 0,
-                                type: "success",
-                                dismissible: "",
-                                onInput: _cache[1] || (_cache[1] = ($event) => $data.showAlert = false)
-                              }, {
-                                default: withCtx(() => [
-                                  createTextVNode(toDisplayString($data.message), 1)
-                                ]),
-                                _: 1
-                              })) : createCommentVNode("", true)
-                            ]),
-                            _: 1
-                          })
-                        ]),
-                        _: 1
-                      })
+                            _: 2
+                          }, 1024),
+                          (openBlock(), createElementBlock(Fragment, null, renderList(6, (j) => {
+                            return createVNode(_component_v_col, {
+                              key: `${n}${j}`,
+                              cols: "6",
+                              md: "2"
+                            }, {
+                              default: withCtx(() => [
+                                createVNode(_component_v_skeleton_loader, { type: "article" })
+                              ]),
+                              _: 2
+                            }, 1024);
+                          }), 64))
+                        ], 64);
+                      }), 64))
                     ]),
                     _: 1
                   })
@@ -37628,12 +37613,10 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
           })
         ]),
         _: 1
-      })
-    ]),
-    _: 1
-  });
-}
-const ExampleFoundryVTTVuetify = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["render", _sfc_render]]);
+      });
+    };
+  }
+};
 const _hoisted_1$2 = { class: "app" };
 const _hoisted_2$2 = { class: "sidebar" };
 const _hoisted_3$2 = ["onClick"];
@@ -37666,7 +37649,7 @@ const _sfc_main$3 = {
         "PLAYERS": ExampleFoundryVTTPlayers,
         "VUEUSE": ExampleFoundryVTTVueUse,
         "PINIA": _sfc_main$5,
-        "VUETIFY": ExampleFoundryVTTVuetify
+        "VUETIFY": _sfc_main$4
       }
     };
     const footerLinks = {
@@ -37759,6 +37742,7 @@ class VueExamples extends VueApplicationMixin(ApplicationV2$1) {
     actions: {}
   }, { inplace: false });
   static DEBUG = true;
+  static SHADOWROOT = false;
   static PARTS = {
     app: {
       id: "app",
